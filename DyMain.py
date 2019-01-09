@@ -178,8 +178,8 @@ def testDataenerator(files,lbls):
 # In[43]:
 
 
-librosa.output.write_wav('file.wav', audios[5], sr, norm=False)
-plt.plot(audios[5])
+#librosa.output.write_wav('file.wav', audios[5], sr, norm=False)
+#plt.plot(audios[5])
 
 
 # In[44]:
