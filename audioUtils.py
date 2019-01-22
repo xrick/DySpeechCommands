@@ -5,9 +5,10 @@ import librosa
 import os
 from tqdm import tqdm
 import numpy as np
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import itertools
 
+'''
 def plot_confusion_matrix(cm, classes,
                           normalize=False,
                           title='Confusion matrix',
@@ -43,7 +44,7 @@ def plot_confusion_matrix(cm, classes,
     plt.xlabel('Predicted label', fontsize=30)
     plt.savefig('picConfMatrix.png', dpi = 400)
     plt.tight_layout()
-
+'''
 def WAV2Numpy(folder, sr = None):
     """
     Recursively converts WAV to numpy arrays. Deletes the WAV files in the process

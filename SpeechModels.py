@@ -34,18 +34,18 @@ def ConvSpeechModel(nCategories, samplingrate = 16000, inputLength = 16000):
     x = Permute((2,1,3)) (x)
     #x = Reshape((94,80)) (x) #this is strange - but now we have (batch_size, sequence, vec_dim)
 
-    c1 = Conv2D(20, (5,1) , activation='relu', padding='same') (x)
+    c1 = Conv2D(40, (5,1) , activation='relu', padding='same') (x)
     c1 = BatchNormalization() (c1)
     p1 = MaxPooling2D((2, 1)) (c1)
     p1 = Dropout(0.03) (p1)
 
-    c2 = Conv2D(40, (3,3) , activation='relu', padding='same') (p1)
+    c2 = Conv2D(60, (3,3) , activation='relu', padding='same') (p1)
     c2 = BatchNormalization() (c2)
     p2 = MaxPooling2D((2, 2)) (c2)
     p2 = Dropout(0.01) (p2)
     
 
-    c3 = Conv2D(80, (3,3) , activation='relu', padding='same') (p2)
+    c3 = Conv2D(100, (3,3) , activation='relu', padding='same') (p2)
     c3 = BatchNormalization() (c3)
     p3 = MaxPooling2D((2, 2)) (c3)
 

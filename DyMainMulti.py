@@ -9,6 +9,8 @@ import os
 import audioUtils
 import SpeechModels
 
+
+os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 #Convert WAV to Numpy Matrix
 def convertWAV2Numpy():
     print('Converting test set WAVs to numpy files')
@@ -81,7 +83,7 @@ def preparedyspeechcmd():
     DYSCmdCategs = {'unknown' : 0, 'one': 1, 'two' : 2, 'three' : 3, 'four' : 4, 'five' : 5, 'six' : 6, 'seven' : 7, 'eight' : 8, 'nine' : 9, 'close' : 10, 'up' : 11,
                     'down' : 12, 'previous' : 13, 'next' : 14, 'in' : 15, 'out' : 16,'left' : 17, 'right' : 18, 'home' : 19}
     numDYCmdCategs = 20
-    _baseDir = 'linzy_command'
+    _baseDir = '../Linzy/linzy_command/'
     firstLevelDirs = getNextLevelDirs(_baseDir)
     trainfiles = list()
     for folder in firstLevelDirs:
@@ -192,7 +194,7 @@ from keras.utils import to_categorical
 from keras.callbacks import ModelCheckpoint, LearningRateScheduler
 #from keras import backend as K
 from keras import optimizers
-#from keras.optimizers import SGD
+from keras.optimizers import SGD
 from kapre.time_frequency import Melspectrogram, Spectrogram
 #from keras_tqdm import TQDMNotebookCallback
 
@@ -204,7 +206,7 @@ from kapre.time_frequency import Melspectrogram, Spectrogram
 #model = SpeechModels.AttRNNSpeechModel(_numofCategs, samplingrate = sr, inputLength = iLen)
 model = SpeechModels.ConvSpeechModel(_numofCategs, samplingrate = sr, inputLength = iLen)
 
-sgd = SGD(lr=0.00001, decay=1e-6, momentum=0.9, nesterov=True)
+sgd = SGD(lr=0.0000001, decay=1e-6, momentum=0.9, nesterov=True)
 model.compile(optimizer='sgd', loss = ['sparse_categorical_crossentropy'], metrics=['sparse_categorical_accuracy']) 
 #model.compile(optimizer='adam', loss=['sparse_categorical_crossentropy'], metrics=['sparse_categorical_accuracy'])
 model.summary()
@@ -236,7 +238,7 @@ lrate = LearningRateScheduler(step_decay)
 #callbacks_list = [checkpointer]
 #result = model.fit(x_train,y_train, epochs = 20, batch_size = 64, callbacks=[TQDMNotebookCallback])
 #result = model.fit(x_train,y_train, epochs = 20, batch_size = 64, callbacks=[checkpointer])
-result = model.fit(x_train,y_train, epochs = 80, batch_size = 32)
+result = model.fit(x_train,y_train, epochs = 40, batch_size = 16)
 
 #model_json = model.to_json()
 #with open("modelJSON.json", "w") as json_file:
@@ -245,5 +247,5 @@ result = model.fit(x_train,y_train, epochs = 80, batch_size = 32)
 
 print("Saving Model.........")
 #model.save('AttRNN_model.h5')
-model.save('Conv_model.h5')
+model.save(os.path.join('.',DysTrainedModelPath,'Conv_model.h5'))
 print("Print the history:\n",result)
