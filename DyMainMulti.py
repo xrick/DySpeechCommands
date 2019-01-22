@@ -17,7 +17,7 @@ def convertWAV2Numpy():
     audioUtils.WAV2Numpy(basePath + '/train/')
 # prepare the labels for training
 basePath = "sd_GSCmdV2"
-
+DysTrainedModelPath = "TrainedModels"
 def preparegooglespeechcmd():
     
     GSCmdV2Categs = {'unknown' : 0, 'silence' : 0, '_unknown_' : 0, '_silence_' : 0, '_background_noise_' : 0, 'yes' : 2, 
@@ -105,7 +105,7 @@ def getNextLevelDirs(root):
 
 sr=16000 #we know this one for google audios
 iLen = 16000
-batchSize = 64
+batchSize = 32#64
 #preparegooglespeechcmd()
 _dscInfo, _numofCategs = preparedyspeechcmd()
 
@@ -199,8 +199,8 @@ from kapre.time_frequency import Melspectrogram, Spectrogram
 
 
 #self-attention LSTM
-model = SpeechModels.AttRNNSpeechModel(_numofCategs, samplingrate = sr, inputLength = iLen)
-#model = SpeechModels.ConvSpeechModel(_numofCategs, samplingrate = sr, inputLength = iLen)
+#model = SpeechModels.AttRNNSpeechModel(_numofCategs, samplingrate = sr, inputLength = iLen)
+model = SpeechModels.ConvSpeechModel(_numofCategs, samplingrate = sr, inputLength = iLen)
 
 #sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
 #model.compile(optimizer='sgd', loss = ['sparse_categorical_crossentropy'], metrics=['sparse_categorical_accuracy']) 
@@ -225,21 +225,23 @@ lrate = LearningRateScheduler(step_decay)
 
 
 #earlystopper = EarlyStopping(monitor='val_sparse_categorical_accuracy', patience=10, verbose=1)
-#checkpointer = ModelCheckpoint('model-attRNN.h5', monitor='val_sparse_categorical_accuracy', verbose=1, save_best_only=True)
-checkpointer = ModelCheckpoint('model-Conv.h5', monitor='val_sparse_categorical_accuracy', verbose=1, save_best_only=True)
+#checkpointer = ModelCheckpoint('AttRNN_model.h5', monitor='val_sparse_categorical_accuracy', verbose=1, save_best_only=True)
+#checkpointer = ModelCheckpoint('Conv_model.h5', monitor='val_sparse_categorical_accuracy', verbose=0, save_best_only=True)
 
 #results = model.fit_generator(trainingData, validation_data = None, epochs = 40, use_multiprocessing=False, workers=1,
                     #callbacks=[earlystopper, checkpointer, lrate])
 #result = model.fit(x_train,y_train, epochs = 20, batch_size = 64)
 #callbacks_list = [checkpointer]
 #result = model.fit(x_train,y_train, epochs = 20, batch_size = 64, callbacks=[TQDMNotebookCallback])
-result = model.fit(x_train,y_train, epochs = 20, batch_size = 64, callbacks=[checkpointer])
+#result = model.fit(x_train,y_train, epochs = 20, batch_size = 64, callbacks=[checkpointer])
+result = model.fit(x_train,y_train, epochs = 80, batch_size = 32)
 
-model_json = model.to_json()
-with open("modelJSON.json", "w") as json_file:
-    print("Serializing the model to json string.....")
-    json_file.write(model_json)
+#model_json = model.to_json()
+#with open("modelJSON.json", "w") as json_file:
+ #   print("Serializing the model to json string.....")
+  #  json_file.write(model_json)
 
 print("Saving Model.........")
-model.save('AttRNN_model.h5')
+#model.save('AttRNN_model.h5')
+model.save('Conv_model.h5')
 print("Print the history:\n",result)
