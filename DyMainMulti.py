@@ -15,9 +15,11 @@ def convertWAV2Numpy():
     audioUtils.WAV2Numpy(basePath + '/test/')
     print('Converting training set WAVs to numpy files')
     audioUtils.WAV2Numpy(basePath + '/train/')
+    return
 # prepare the labels for training
 basePath = "sd_GSCmdV2"
-DysTrainedModelPath = "TrainedModels"
+DysTrainedModelPath = "TrainedModels"
+
 def preparegooglespeechcmd():
     
     GSCmdV2Categs = {'unknown' : 0, 'silence' : 0, '_unknown_' : 0, '_silence_' : 0, '_background_noise_' : 0, 'yes' : 2, 
@@ -202,9 +204,9 @@ from kapre.time_frequency import Melspectrogram, Spectrogram
 #model = SpeechModels.AttRNNSpeechModel(_numofCategs, samplingrate = sr, inputLength = iLen)
 model = SpeechModels.ConvSpeechModel(_numofCategs, samplingrate = sr, inputLength = iLen)
 
-#sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
-#model.compile(optimizer='sgd', loss = ['sparse_categorical_crossentropy'], metrics=['sparse_categorical_accuracy']) 
-model.compile(optimizer='adam', loss=['sparse_categorical_crossentropy'], metrics=['sparse_categorical_accuracy'])
+sgd = SGD(lr=0.00001, decay=1e-6, momentum=0.9, nesterov=True)
+model.compile(optimizer='sgd', loss = ['sparse_categorical_crossentropy'], metrics=['sparse_categorical_accuracy']) 
+#model.compile(optimizer='adam', loss=['sparse_categorical_crossentropy'], metrics=['sparse_categorical_accuracy'])
 model.summary()
 
 
