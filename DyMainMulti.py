@@ -207,8 +207,8 @@ from kapre.time_frequency import Melspectrogram, Spectrogram
 model = SpeechModels.ConvSpeechModel(_numofCategs, samplingrate = sr, inputLength = iLen)
 
 sgd = SGD(lr=0.0000001, decay=1e-6, momentum=0.9, nesterov=True)
-model.compile(optimizer='sgd', loss = ['sparse_categorical_crossentropy'], metrics=['sparse_categorical_accuracy']) 
-#model.compile(optimizer='adam', loss=['sparse_categorical_crossentropy'], metrics=['sparse_categorical_accuracy'])
+#model.compile(optimizer='sgd', loss = ['sparse_categorical_crossentropy'], metrics=['sparse_categorical_accuracy']) 
+model.compile(optimizer='adam', loss=['sparse_categorical_crossentropy'], metrics=['sparse_categorical_accuracy'])
 model.summary()
 
 
@@ -237,8 +237,8 @@ lrate = LearningRateScheduler(step_decay)
 #result = model.fit(x_train,y_train, epochs = 20, batch_size = 64)
 #callbacks_list = [checkpointer]
 #result = model.fit(x_train,y_train, epochs = 20, batch_size = 64, callbacks=[TQDMNotebookCallback])
-#result = model.fit(x_train,y_train, epochs = 20, batch_size = 64, callbacks=[checkpointer])
-result = model.fit(x_train,y_train, epochs = 40, batch_size = 16)
+#result = model.fit(x_train,y_train, epochs = 20, batch_size = 64, callbacks=[lrate])
+result = model.fit(x_train,y_train, epochs = 60, batch_size = 32)
 
 #model_json = model.to_json()
 #with open("modelJSON.json", "w") as json_file:

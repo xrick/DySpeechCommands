@@ -22,7 +22,7 @@ os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 
 #Load the CNN model
 modelRootDict = "TrainedModels"
-testRootDict = "Testing"
+testRootDict = "../Linzy/Testing"
 _cnn_model_path = os.path.join(".",modelRootDict,"Conv_model.h5")
 #_rnn_model_path = os.path.join(".",modelRootDict,"AttRNN_model.h5")
 _custom_objects={'Melspectrogram':Melspectrogram(),'Normalization2D':Normalization2D(int_axis=0)}

@@ -31,9 +31,9 @@ def ConvSpeechModel(nCategories, samplingrate = 16000, inputLength = 16000):
     #note that Melspectrogram puts the sequence in shape (batch_size, melDim, timeSteps, 1)
     #we would rather have it the other way around for LSTMs
 
-    x = Permute((2,1,3)) (x)
+    #x = Permute((2,1,3)) (x)
     #x = Reshape((94,80)) (x) #this is strange - but now we have (batch_size, sequence, vec_dim)
-
+    '''
     c1 = Conv2D(40, (5,1) , activation='relu', padding='same') (x)
     c1 = BatchNormalization() (c1)
     p1 = MaxPooling2D((2, 1)) (c1)
@@ -59,7 +59,32 @@ def ConvSpeechModel(nCategories, samplingrate = 16000, inputLength = 16000):
     #output = Dense(nCategories, activation = 'softmax')(p1)
 
     model = Model(inputs=[inputs], outputs=[output], name='ConvSpeechModel')
-    
+    '''
+    c1 = Conv2D(20, (5,1) , activation='relu', padding='same') (x)
+    c1 = BatchNormalization() (c1)
+    p1 = MaxPooling2D((2, 1)) (c1)
+    p1 = Dropout(0.03) (p1)
+
+    c2 = Conv2D(40, (3,3) , activation='relu', padding='same') (p1)
+    c2 = BatchNormalization() (c2)
+    p2 = MaxPooling2D((2, 2)) (c2)
+    p2 = Dropout(0.01) (p2)
+
+    c3 = Conv2D(80, (3,3) , activation='relu', padding='same') (p2)
+    c3 = BatchNormalization() (c3)
+    p3 = MaxPooling2D((2, 2)) (c3)
+
+    c4 = Conv2D(160, (3,3) , activation='relu', padding='same') (p3)
+    c4 = BatchNormalization() (c4)
+    p4 = MaxPooling2D((2, 2)) (c4)
+
+    p4 = Flatten()(p4)
+    p4 = Dense(64, activation = 'relu')(p4)
+    p4 = Dense(32, activation = 'relu')(p4)
+
+    output = Dense(nCategories, activation = 'softmax')(p4)
+
+    model = Model(inputs=[inputs], outputs=[output], name='ConvSpeechModel')
     return model
 
 
