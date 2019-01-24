@@ -204,11 +204,13 @@ from kapre.time_frequency import Melspectrogram, Spectrogram
 
 #self-attention LSTM
 #model = SpeechModels.AttRNNSpeechModel(_numofCategs, samplingrate = sr, inputLength = iLen)
-model = SpeechModels.ConvSpeechModel(_numofCategs, samplingrate = sr, inputLength = iLen)
+#model = SpeechModels.ConvSpeechModel(_numofCategs, samplingrate = sr, inputLength = iLen)
+model = SpeechModels.SimpleDNN(_numofCategs,inputLength = iLen)
 
-sgd = SGD(lr=0.0000001, decay=1e-6, momentum=0.9, nesterov=True)
+sgd = SGD(lr=0.0000005, decay=1e-6, momentum=0.9, nesterov=True)
 #model.compile(optimizer='sgd', loss = ['sparse_categorical_crossentropy'], metrics=['sparse_categorical_accuracy']) 
-model.compile(optimizer='adam', loss=['sparse_categorical_crossentropy'], metrics=['sparse_categorical_accuracy'])
+model.compile(optimizer='sgd', loss=['sparse_categorical_crossentropy'], metrics=['sparse_categorical_accuracy'])
+#model.compile(optimizer='adam', loss=['categorical_crossentropy'], metrics=['categorical_crossentropy'])
 model.summary()
 
 
@@ -238,7 +240,7 @@ lrate = LearningRateScheduler(step_decay)
 #callbacks_list = [checkpointer]
 #result = model.fit(x_train,y_train, epochs = 20, batch_size = 64, callbacks=[TQDMNotebookCallback])
 #result = model.fit(x_train,y_train, epochs = 20, batch_size = 64, callbacks=[lrate])
-result = model.fit(x_train,y_train, epochs = 60, batch_size = 32)
+result = model.fit(x_train,y_train, epochs = 1000, batch_size = 32)
 
 #model_json = model.to_json()
 #with open("modelJSON.json", "w") as json_file:
@@ -247,5 +249,5 @@ result = model.fit(x_train,y_train, epochs = 60, batch_size = 32)
 
 print("Saving Model.........")
 #model.save('AttRNN_model.h5')
-model.save(os.path.join('.',DysTrainedModelPath,'Conv_model.h5'))
+model.save(os.path.join('.',DysTrainedModelPath,'DNN_model.h5'))
 print("Print the history:\n",result)

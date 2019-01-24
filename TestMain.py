@@ -23,8 +23,9 @@ os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 #Load the CNN model
 modelRootDict = "TrainedModels"
 testRootDict = "../Linzy/Testing"
-_cnn_model_path = os.path.join(".",modelRootDict,"Conv_model.h5")
+_cnn_model_path = os.path.join(".",modelRootDict,"Conv_model.h5") #DNN_model
 #_rnn_model_path = os.path.join(".",modelRootDict,"AttRNN_model.h5")
+_dnn_model_path = os.path.join(".",modelRootDict,"DNN_model.h5")
 _custom_objects={'Melspectrogram':Melspectrogram(),'Normalization2D':Normalization2D(int_axis=0)}
 global theCNNModel
 def __load_model(modelPath):
@@ -71,10 +72,10 @@ def _adjustShape(rawArray):
 
 def main():
     print("Loading the Model...........")
-    __theCNNModel = __load_model(_cnn_model_path)
+    __theCNNModel = __load_model(_dnn_model_path)
     #__theRNNModel = __load_model(_rnn_model_path)
     print("Reading the test wav file.........")
-    y, sr = _read_test_wav("LinZY03_04_6_four.wav")
+    y, sr = _read_test_wav("LinZY03_17_6_left.wav")
     y = _adjustShape(y)#np.transpose(_adjustShape(y))
     #__theCNNModel.summary()
     __theCNNModel.summary()
