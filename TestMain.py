@@ -43,10 +43,27 @@ def _read_test_wav(wav_file):
     '''
     testfile = os.path.join("..",'Linzy', testRootDict, wav_file)
     print("reading the test wav file:",testfile)
-    return librosa.load(testfile,16000)
+    return librosa.load(testfile)
     
-
-
+'''
+def _read_test_npy(npy_file):
+        curX = np.load(_f)
+            
+        #check equal,smaller, or bigger
+        #and truncate or padding
+        #curX could be bigger or smaller than self.dim
+        if curX.shape[0] == iLen:
+                return curX
+                #print('Same dim')
+        elif curX.shape[0] > iLen: #bigger#we can choose any position in curX-self.dim
+                randPos = np.random.randint(curX.shape[0]-iLen) 
+                curX = curX[randPos:randPos+iLen]
+                #print('File dim bigger')
+        else: #smaller
+                randPos = np.random.randint(iLen-curX.shape[0])
+                curX[i,randPos:randPos+curX.shape[0]] = curX
+        return curX
+'''
 # In[4]:
 
 
@@ -75,7 +92,8 @@ def main():
     __theCNNModel = __load_model(_dnn_model_path)
     #__theRNNModel = __load_model(_rnn_model_path)
     print("Reading the test wav file.........")
-    y, sr = _read_test_wav("LinZY03_17_6_left.wav")
+    #y, sr = _read_test_wav("../Linzy/Testing/LinZY03_13_6_previous.wav")
+    y = np.load("../Linzy/Testing/LinZY03_10_6.wav.npy")
     y = _adjustShape(y)#np.transpose(_adjustShape(y))
     #__theCNNModel.summary()
     __theCNNModel.summary()

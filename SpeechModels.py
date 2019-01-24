@@ -14,9 +14,20 @@ from kapre.utils import Normalization2D
 def SimpleDNN(nCategories, inputLength = 16000):
     model = Sequential()
     model.add(Dense(32, input_dim=16000, activation='relu'))
+    #model.add(BatchNormalization())
+    model.add(Dense(32, activation='relu'))
+    
+    #model.add(BatchNormalization())
     model.add(Dense(64, activation='relu'))
+    model.add(Dense(64, activation='relu'))
+    #model.add(BatchNormalization())
+    
+    #model.add(BatchNormalization())
     model.add(Dense(128, activation='relu'))
-    #model.add(Dense(256, activation='relu'))
+    #model.add(BatchNormalization())
+   
+    
+    
     model.add(Dense(nCategories, activation = 'softmax'))
 
     return model

@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-#import librosa
+import librosa
 #import matplotlib
 import numpy as np
 #import matplotlib.pyplot as plt
@@ -89,7 +89,8 @@ def preparedyspeechcmd():
     for folder in firstLevelDirs:
         d = os.path.join(_baseDir,folder)
         #print(d)
-        files = [os.path.join(d,f+'.npy') for f in next(os.walk(d))[2] if f.endswith('.wav')]
+        #files = [os.path.join(d,f+'.npy') for f in next(os.walk(d))[2] if f.endswith('.wav')]
+        files = [os.path.join(d,f) for f in next(os.walk(d))[2] if f.endswith('.wav')]
         #print(files)
         #trainfiles.append([os.path.join(d,f+'.npy') for f in next(os.walk(d))[2] if f.endswith('.wav')])
         trainfiles += files
@@ -123,22 +124,22 @@ def all_training_data_generation(list_of_files, _labels):
         for i, _f in enumerate(list_of_files):
             #print("current _f is : ",_f)
             #load npy file
-            curX = np.load(_f)
+            curX = librosa.load(_f)#np.load(_f)
             
             #check equal,smaller, or bigger
             #and truncate or padding
             #curX could be bigger or smaller than self.dim
-            if curX.shape[0] == iLen:
+            if len(curX[0]) == iLen:
                 X[i] = curX
                 #print('Same dim')
-            elif curX.shape[0] > iLen: #bigger
+            elif len(curX[0]) > iLen: #bigger
                 #we can choose any position in curX-self.dim
-                randPos = np.random.randint(curX.shape[0]-iLen) 
+                randPos = np.random.randint(len(curX[0])-iLen) 
                 X[i] = curX[randPos:randPos+iLen]
                 #print('File dim bigger')
             else: #smaller
-                randPos = np.random.randint(iLen-curX.shape[0])
-                X[i,randPos:randPos+curX.shape[0]] = curX
+                randPos = np.random.randint(iLen-len(curX[0]))
+                X[i,randPos:randPos+curX[0]] = curX
                 #print('File dim smaller')
         # Store class
             y[i] = _labels[_f]
@@ -209,7 +210,7 @@ model = SpeechModels.SimpleDNN(_numofCategs,inputLength = iLen)
 
 sgd = SGD(lr=0.0000005, decay=1e-6, momentum=0.9, nesterov=True)
 #model.compile(optimizer='sgd', loss = ['sparse_categorical_crossentropy'], metrics=['sparse_categorical_accuracy']) 
-model.compile(optimizer='sgd', loss=['sparse_categorical_crossentropy'], metrics=['sparse_categorical_accuracy'])
+model.compile(optimizer='sgd', loss=['sparse_categorical_crossentropy'], metrics=['accuracy'])
 #model.compile(optimizer='adam', loss=['categorical_crossentropy'], metrics=['categorical_crossentropy'])
 model.summary()
 
@@ -240,7 +241,7 @@ lrate = LearningRateScheduler(step_decay)
 #callbacks_list = [checkpointer]
 #result = model.fit(x_train,y_train, epochs = 20, batch_size = 64, callbacks=[TQDMNotebookCallback])
 #result = model.fit(x_train,y_train, epochs = 20, batch_size = 64, callbacks=[lrate])
-result = model.fit(x_train,y_train, epochs = 1000, batch_size = 32)
+result = model.fit(x_train,y_train, epochs = 1500, batch_size = 32)
 
 #model_json = model.to_json()
 #with open("modelJSON.json", "w") as json_file:
