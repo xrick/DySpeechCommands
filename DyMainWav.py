@@ -118,7 +118,6 @@ def all_training_data_generation(list_of_files, _labels):
         len_of_processing_files = len(list_of_files)
         X = np.empty((len(list_of_files),iLen)) #64 files, each file is 16000 long
         y = np.empty((len(list_of_files)),dtype=int)
-        
         #Start to generate the training data
         for i, _f in enumerate(list_of_files):
             #print("current _f is : ",_f)
@@ -213,11 +212,11 @@ from kapre.time_frequency import Melspectrogram, Spectrogram
 #model = SpeechModels.ConvSpeechModel(_numofCategs, samplingrate = sr, inputLength = iLen)
 model = SpeechModels.SimpleDNN(_numofCategs,inputLength = iLen)
 
-sgd = SGD(lr=0.0000005, decay=1e-6, momentum=0.9, nesterov=True)
+sgd = SGD(lr=0.000000000001, decay=1e-6, momentum=0.9, nesterov=True)
 #model.compile(optimizer='sgd', loss = ['sparse_categorical_crossentropy'], metrics=['sparse_categorical_accuracy']) 
 model.compile(optimizer='sgd', loss=['sparse_categorical_crossentropy'], metrics=['accuracy'])
-#model.compile(optimizer='adam', loss=['categorical_crossentropy'], metrics=['categorical_crossentropy'])
-model.summary()
+#model.compile(optimizer='adam', loss=['sparse_categorical_crossentropy'], metrics=['accuracy'])
+#model.summary()
 
 
 import math
@@ -248,12 +247,13 @@ lrate = LearningRateScheduler(step_decay)
 #result = model.fit(x_train,y_train, epochs = 20, batch_size = 64, callbacks=[lrate])
 result = model.fit(x_train,y_train, epochs = 300, batch_size = 32)
 
-#model_json = model.to_json()
-#with open("modelJSON.json", "w") as json_file:
- #   print("Serializing the model to json string.....")
-  #  json_file.write(model_json)
+'''
+model_json = model.to_json()
+with open("modelJSON.json", "w") as json_file:
+    print("Serializing the model to json string.....")
+    json_file.write(model_json)
+'''
 
 print("Saving Model.........")
-#model.save('AttRNN_model.h5')
 model.save(os.path.join('.',DysTrainedModelPath,'DNN_model.h5'))
 print("Print the history:\n",result)

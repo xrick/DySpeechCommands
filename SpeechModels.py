@@ -13,7 +13,8 @@ from kapre.utils import Normalization2D
 
 def SimpleDNN(nCategories, inputLength = 16000):
     model = Sequential()
-    model.add(Dense(32, input_dim=16000, activation='relu'))
+    #model.add(Dense(32, input_dim=16000, activation='relu'))
+    model.add(Dense(32, activation='relu'))
     #model.add(BatchNormalization())
     model.add(Dense(32, activation='relu'))
     
@@ -37,53 +38,29 @@ def ConvSpeechModel(nCategories, samplingrate = 16000, inputLength = 16000):
     Base fully convolutional model for speech recognition
     """
 
-    #inputs = Input((inputLength,))
+    inputs = Input((inputLength,))
 
-    #x = Reshape((1, -1)) (inputs)
+    x = Reshape((1, -1)) (inputs)
     #print("x's before:",x.shape)
-    '''
+    
     x = Melspectrogram(n_dft=1024, n_hop=128, input_shape=(1, inputLength),
                              padding='same', sr=samplingrate, n_mels=80,
                              fmin=40.0, fmax=samplingrate/2, power_melgram=1.0,
                              return_decibel_melgram=True, trainable_fb=False,
                              trainable_kernel=False,
                              name='mel_stft') (x)
-    '''
+    
     #print("x's shape",x.shape)
     #return
     #x = Normalization2D(int_axis=0)(x)
     #note that Melspectrogram puts the sequence in shape (batch_size, melDim, timeSteps, 1)
     #we would rather have it the other way around for LSTMs
 
-    #x = Permute((2,1,3)) (x)
+    x = Permute((2,1,3)) (x)
     #print("x's shape", x.shape)
     #return
     #x = Reshape((94,80)) (x) #this is strange - but now we have (batch_size, sequence, vec_dim)
-    model = Sequential()
-    x = Dense(64,input_shape = (16000,)) #input layer
-    model.add(x)
-    #first layer of cnn
-    model.add(Conv2D(20, (5,1) , activation='relu', padding='same'))
-    model.add(BatchNormalization())
-    model.add(MaxPooling2D((2, 1)))
-    model.add(Dropout(0.003))
-
-    #second layer
-    model.add(Conv2D(40, (3,3) , activation='relu', padding='same'))
-    model.add(BatchNormalization())
-    model.add(MaxPooling2D((2, 2)))
-    model.add(Dropout(0.001))
-
-    #three layer
-    model.add(Conv2D(80, (3,3) , activation='relu', padding='same'))
-    model.add(BatchNormalization())
-    model.add(MaxPooling2D((2, 2)))
-
-    model.add(Flatten())
-    model.add(Dense(64, activation = 'relu'))
-    model.add(Dense(32, activation = 'relu'))
-    model.add(Dense(nCategories, activation = 'softmax'))
-    '''
+    
     c1 = Conv2D(20, (5,1) , activation='relu', padding='same') (x)
     c1 = BatchNormalization() (c1)
     p1 = MaxPooling2D((2, 1)) (c1)
@@ -105,7 +82,7 @@ def ConvSpeechModel(nCategories, samplingrate = 16000, inputLength = 16000):
     output = Dense(nCategories, activation = 'softmax')(p3)
 
     model = Model(inputs=[inputs], outputs=[output], name='ConvSpeechModel')
-    '''
+    
     return model
 
 
