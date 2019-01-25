@@ -24,9 +24,8 @@ def SimpleDNN(nCategories, inputLength = 16000):
     #model.add(BatchNormalization())
     
     #model.add(BatchNormalization())
-    model.add(Dense(128, activation='relu'))
+    model.add(Dense(128, activation='sigmoid'))
     #model.add(BatchNormalization())
-   
     
     
     model.add(Dense(nCategories, activation = 'softmax'))

@@ -212,7 +212,7 @@ from kapre.time_frequency import Melspectrogram, Spectrogram
 #model = SpeechModels.ConvSpeechModel(_numofCategs, samplingrate = sr, inputLength = iLen)
 model = SpeechModels.SimpleDNN(_numofCategs,inputLength = iLen)
 
-sgd = SGD(lr=0.000000000001, decay=1e-6, momentum=0.9, nesterov=True)
+sgd = SGD(lr=0.0000000000000001, decay=1e-6, momentum=0.9, nesterov=True)
 #model.compile(optimizer='sgd', loss = ['sparse_categorical_crossentropy'], metrics=['sparse_categorical_accuracy']) 
 model.compile(optimizer='sgd', loss=['sparse_categorical_crossentropy'], metrics=['accuracy'])
 #model.compile(optimizer='adam', loss=['sparse_categorical_crossentropy'], metrics=['accuracy'])
@@ -245,7 +245,7 @@ lrate = LearningRateScheduler(step_decay)
 #callbacks_list = [checkpointer]
 #result = model.fit(x_train,y_train, epochs = 20, batch_size = 64, callbacks=[TQDMNotebookCallback])
 #result = model.fit(x_train,y_train, epochs = 20, batch_size = 64, callbacks=[lrate])
-result = model.fit(x_train,y_train, epochs = 300, batch_size = 32)
+result = model.fit(x_train,y_train, epochs = 800, batch_size = 32)
 
 '''
 model_json = model.to_json()

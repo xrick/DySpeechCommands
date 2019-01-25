@@ -132,7 +132,7 @@ def main():
     __theDNNModel = __load_model(_dnn_model_path)
     #__theRNNModel = __load_model(_rnn_model_path)
     print("Reading the test wav file.........")
-    raw_y, sr = librosa.load("../linzyCut/train/10close/LinZY03_10_5.wav")#_read_test_wav("../linzyCut/test/LinZY03_01_6_one.wav")
+    raw_y, sr = librosa.load("../linzyCut/train/13previous/LinZY03_13_5.wav")#_read_test_wav("../linzyCut/test/LinZY03_01_6_one.wav")
     len_of_rawy = len(raw_y)
     #y_npy = np.load("../linzyCut/test/LinZY03_13_6_previous.wav.npy")
     y = _adjustNPYShape(raw_y)#np.transpose(_adjustShape(y))
