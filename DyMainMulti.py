@@ -83,14 +83,14 @@ def preparedyspeechcmd():
     DYSCmdCategs = {'unknown' : 0, 'one': 1, 'two' : 2, 'three' : 3, 'four' : 4, 'five' : 5, 'six' : 6, 'seven' : 7, 'eight' : 8, 'nine' : 9, 'close' : 10, 'up' : 11,
                     'down' : 12, 'previous' : 13, 'next' : 14, 'in' : 15, 'out' : 16,'left' : 17, 'right' : 18, 'home' : 19}
     numDYCmdCategs = 20
-    _baseDir = '../Linzy/linzy_command/'
+    _baseDir = '../linzyCut/train/'
     firstLevelDirs = getNextLevelDirs(_baseDir)
     trainfiles = list()
     for folder in firstLevelDirs:
         d = os.path.join(_baseDir,folder)
         #print(d)
-        #files = [os.path.join(d,f+'.npy') for f in next(os.walk(d))[2] if f.endswith('.wav')]
-        files = [os.path.join(d,f) for f in next(os.walk(d))[2] if f.endswith('.wav')]
+        files = [os.path.join(d,f+'.npy') for f in next(os.walk(d))[2] if f.endswith('.wav')]
+        #files = [os.path.join(d,f) for f in next(os.walk(d))[2] if f.endswith('.wav')]
         #print(files)
         #trainfiles.append([os.path.join(d,f+'.npy') for f in next(os.walk(d))[2] if f.endswith('.wav')])
         trainfiles += files
@@ -124,22 +124,22 @@ def all_training_data_generation(list_of_files, _labels):
         for i, _f in enumerate(list_of_files):
             #print("current _f is : ",_f)
             #load npy file
-            curX = librosa.load(_f)#np.load(_f)
+            curX = np.load(_f)
             
             #check equal,smaller, or bigger
             #and truncate or padding
             #curX could be bigger or smaller than self.dim
-            if len(curX[0]) == iLen:
+            if curX.shape[0] == iLen:
                 X[i] = curX
                 #print('Same dim')
-            elif len(curX[0]) > iLen: #bigger
+            elif curX.shape[0] > iLen: #bigger
                 #we can choose any position in curX-self.dim
-                randPos = np.random.randint(len(curX[0])-iLen) 
+                randPos = np.random.randint(curX.shape[0]-iLen) 
                 X[i] = curX[randPos:randPos+iLen]
                 #print('File dim bigger')
             else: #smaller
-                randPos = np.random.randint(iLen-len(curX[0]))
-                X[i,randPos:randPos+curX[0]] = curX
+                randPos = np.random.randint(iLen-curX.shape[0])
+                X[i,randPos:randPos+curX.shape[0]] = curX
                 #print('File dim smaller')
         # Store class
             y[i] = _labels[_f]
@@ -241,7 +241,7 @@ lrate = LearningRateScheduler(step_decay)
 #callbacks_list = [checkpointer]
 #result = model.fit(x_train,y_train, epochs = 20, batch_size = 64, callbacks=[TQDMNotebookCallback])
 #result = model.fit(x_train,y_train, epochs = 20, batch_size = 64, callbacks=[lrate])
-result = model.fit(x_train,y_train, epochs = 1500, batch_size = 32)
+result = model.fit(x_train,y_train, epochs = 400, batch_size = 32)
 
 #model_json = model.to_json()
 #with open("modelJSON.json", "w") as json_file:
