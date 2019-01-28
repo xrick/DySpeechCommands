@@ -4,6 +4,7 @@
 
 import numpy as np
 import keras
+import librosa
 
 
 
@@ -37,7 +38,7 @@ class DySpeechGen(keras.utils.Sequence):
         list_IDs_temp = [self.Files[k] for k in indexes]
         print("list_IDs_temp : ", list_IDs_temp)
         # Generate data
-        X, y = self.__data_generation(list_IDs_temp)
+        X, y = self.__gen_part_training_data(list_IDs_temp)
 
         return X, y
     
@@ -47,7 +48,7 @@ class DySpeechGen(keras.utils.Sequence):
         self.indexes = np.arange(self.allFilesLen)
         #print("self.indexes is {}.",len(self.Files))
             
-    def __data_generation(self,list_of_files):
+    def __gen_part_training_data(self,list_of_files):
         
         X = np.empty((self.batchSize,self.dim)) #64 files, each file is 16000 long
         y = np.empty((self.batchSize),dtype=int)
@@ -56,22 +57,23 @@ class DySpeechGen(keras.utils.Sequence):
         for i, _f in enumerate(list_of_files):
             print("current _f is : ",_f)
             #load npy file
-            curX = np.load(_f)
-            
+            #curX = np.load(_f)
+            #load raw wav file
+            curX = librosa.load(_f, sr=16000)
             #check equal,smaller, or bigger
             #and truncate or padding
             #curX could be bigger or smaller than self.dim
-            if curX.shape[0] == self.dim:
+            if len(curX[0]) == self.dim:
                 X[i] = curX
                 #print('Same dim')
-            elif curX.shape[0] > self.dim: #bigger
+            elif len(curX[0]) > self.dim: #bigger
                 #we can choose any position in curX-self.dim
-                randPos = np.random.randint(curX.shape[0]-self.dim) 
+                randPos = np.random.randint(len(curX[0])-self.dim) 
                 X[i] = curX[randPos:randPos+self.dim]
                 #print('File dim bigger')
             else: #smaller
-                randPos = np.random.randint(self.dim-curX.shape[0])
-                X[i,randPos:randPos+curX.shape[0]] = curX
+                randPos = np.random.randint(self.dim-len(curX[0]))
+                X[i,randPos:randPos+len(curX[0])] = curX
                 #print('File dim smaller')
         # Store class
             y[i] = self.labels[_f]

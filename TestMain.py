@@ -114,7 +114,7 @@ def main2():
     #__theDNNModel = __load_model(_dnn_model_path)
     print("Reading the test npy file.........")
     #y_npy = np.load("../linzyCut/test/LinZY03_13_6_previous.wav.npy")
-    y_wav = _read_test_wav("../linzyCut/test/LinZY03_13_6_previous.wav")
+    y_wav = _read_test_wav("../linzyCut/test/LinZY03_05_6_five.wav")
     print("y_npy's class name: ",y_npy.__class__.__name__)
     print("y_wav's class name: ",y_wav.__class__.__name__)
     print("y_npy's shape:",y_npy.shape)
@@ -126,26 +126,60 @@ def main2():
 
 
 
-def main():
+def cnnmain():
     print("Loading the Model...........")
-    #__theCNNModel = __load_model(_cnn_model_path)
-    __theDNNModel = __load_model(_dnn_model_path)
+    __theCNNModel = __load_model(_cnn_model_path)
+    #__theDNNModel = __load_model(_dnn_model_path)
     #__theRNNModel = __load_model(_rnn_model_path)
     print("Reading the test wav file.........")
-    raw_y, sr = librosa.load("../linzyCut/train/13previous/LinZY03_13_5.wav")#_read_test_wav("../linzyCut/test/LinZY03_01_6_one.wav")
+    
+    raw_y, sr = librosa.load("../linzyCut/test/LinZY03_03_6_three.wav",sr=16000)#_read_test_wav("../linzyCut/test/LinZY03_01_6_one.wav")
     len_of_rawy = len(raw_y)
     #y_npy = np.load("../linzyCut/test/LinZY03_13_6_previous.wav.npy")
     y = _adjustNPYShape(raw_y)#np.transpose(_adjustShape(y))
     #print("has values part is {} : ",y[0:len_of_rawy])
     #__theCNNModel.summary()
-    __theDNNModel.summary()
+    __theCNNModel.summary()
     print("type of y : ", y.__class__.__name__)
     print("shape of y is ", y.shape)
     input_y = y.reshape(1,16000)
     #print("content of input_y : ", input_y)
     #print("length is input_y: ",len(input_y))
     #print("shape's input_y is ",input_y.shape)
-    y_result = __theDNNModel.predict(input_y)
+    y_result = __theCNNModel.predict(input_y)
+    #y_result = __theDNNModel.predict(y)
+    #y_result = __theRNNModel.predict(input_y)
+    lenOfY = 19
+    y_result_list = list(y_result[0])
+    print(max(y_result_list))
+    print("The answer is one")
+    print("====================================")
+    for idx in range(19):
+            print("y_result {0} element is: {1:6f} ==== {2}".format(idx, y_result[0,idx], DYSCmdCategsDigit.get(idx)))
+    print("the shape result is : ",y_result.shape)
+    #print("The predicting result is:",y_result)
+    
+
+def dnnmain():
+    print("Loading the Model...........")
+    __theCNNModel = __load_model(_cnn_model_path)
+    #__theDNNModel = __load_model(_dnn_model_path)
+    #__theRNNModel = __load_model(_rnn_model_path)
+    print("Reading the test wav file.........")
+    raw_y, sr = librosa.load("../linzyCut/test/LinZY03_04_6_four.wav",sr=16000)#_read_test_wav("../linzyCut/test/LinZY03_01_6_one.wav")
+    len_of_rawy = len(raw_y)
+    #y_npy = np.load("../linzyCut/test/LinZY03_13_6_previous.wav.npy")
+    y = _adjustNPYShape(raw_y)#np.transpose(_adjustShape(y))
+    #print("has values part is {} : ",y[0:len_of_rawy])
+    #__theCNNModel.summary()
+    __theCNNModel.summary()
+    print("type of y : ", y.__class__.__name__)
+    print("shape of y is ", y.shape)
+    input_y = y.reshape(1,16000)
+    #print("content of input_y : ", input_y)
+    #print("length is input_y: ",len(input_y))
+    #print("shape's input_y is ",input_y.shape)
+    y_result = __theCNNModel.predict(input_y)
     #y_result = __theDNNModel.predict(y)
     #y_result = __theRNNModel.predict(input_y)
     lenOfY = 19
@@ -156,7 +190,6 @@ def main():
             print("y_result {0} element is: {1:6f} ==== {2}".format(idx, y_result[0,idx], DYSCmdCategsDigit.get(idx)))
     print("the shape result is : ",y_result.shape)
     #print("The predicting result is:",y_result)
-    
 
 
 # In[ ]:
@@ -167,5 +200,5 @@ if __name__ == "__main__":
     #print("NumPy Arrary of testing file is {0} and sample rate is {1}".format(npary, sample_rate))
     #print("Loading the Model...........")
     #__load_model(_cnn_model_path)
-    main()
+    cnnmain()
 

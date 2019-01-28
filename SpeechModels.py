@@ -14,21 +14,18 @@ from kapre.utils import Normalization2D
 def SimpleDNN(nCategories, inputLength = 16000):
     model = Sequential()
     model.add(Dense(32, input_dim=16000, activation='relu'))
-    #model.add(BatchNormalization())
     model.add(Dense(32, activation='relu'))
-    #model.add(BatchNormalization())
-    model.add(Dense(32, activation='relu'))
-    
-    #model.add(BatchNormalization())
+    model.add(Dense(64, activation='sigmoid'))
     model.add(Dense(64, activation='relu'))
-    model.add(Dense(64, activation='relu'))
-    #model.add(BatchNormalization())
+
+    #model.add(Dense(128, activation='relu'))
+    model.add(Dense(128, activation='relu'))
+    ##model.add(BatchNormalization())
+   
     
     #model.add(BatchNormalization())
     model.add(Dense(128, activation='sigmoid'))
-    #model.add(BatchNormalization())
-    
-    
+  
     model.add(Dense(nCategories, activation = 'softmax'))
 
     return model
@@ -52,7 +49,7 @@ def ConvSpeechModel(nCategories, samplingrate = 16000, inputLength = 16000):
     
     #print("x's shape",x.shape)
     #return
-    #x = Normalization2D(int_axis=0)(x)
+    x = Normalization2D(int_axis=0)(x)
     #note that Melspectrogram puts the sequence in shape (batch_size, melDim, timeSteps, 1)
     #we would rather have it the other way around for LSTMs
 
@@ -77,7 +74,7 @@ def ConvSpeechModel(nCategories, samplingrate = 16000, inputLength = 16000):
 
     p3 = Flatten()(p3)
     p3 = Dense(64, activation = 'relu')(p3)
-    p3 = Dense(32, activation = 'relu')(p3)
+    p3 = Dense(32, activation = 'sigmoid')(p3)
 
     output = Dense(nCategories, activation = 'softmax')(p3)
 

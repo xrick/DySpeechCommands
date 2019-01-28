@@ -124,7 +124,7 @@ def all_training_data_generation(list_of_files, _labels):
             #load npy file
             #curX = np.load(_f)
             print("_f is : ",_f)
-            curX, _ = librosa.load(_f)
+            curX, _ = librosa.load(_f,sr=16000)
             #print("curX is : ",curX)
             print("curX is : ",curX)
             print("Length of curX is : ",len(curX))
@@ -199,7 +199,7 @@ from keras.utils import to_categorical
 from keras.callbacks import ModelCheckpoint, LearningRateScheduler
 #from keras import backend as K
 from keras import optimizers
-from keras.optimizers import SGD
+from keras.optimizers import SGD, Adam
 from kapre.time_frequency import Melspectrogram, Spectrogram
 #from keras_tqdm import TQDMNotebookCallback
 
@@ -209,10 +209,11 @@ from kapre.time_frequency import Melspectrogram, Spectrogram
 
 #self-attention LSTM
 #model = SpeechModels.AttRNNSpeechModel(_numofCategs, samplingrate = sr, inputLength = iLen)
-#model = SpeechModels.ConvSpeechModel(_numofCategs, samplingrate = sr, inputLength = iLen)
-model = SpeechModels.SimpleDNN(_numofCategs,inputLength = iLen)
-
-sgd = SGD(lr=0.0000005, decay=1e-6, momentum=0.9, nesterov=True)
+model = SpeechModels.ConvSpeechModel(_numofCategs, samplingrate = sr, inputLength = iLen)
+#model = SpeechModels.SimpleDNN(_numofCategs,inputLength = iLen)
+#1e-6
+sgd = SGD(lr=0.0000000000001) #decay=, momentum= nesterov=True)
+#adam = Adam(lr = 0.00000000001 )#,beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False),
 #model.compile(optimizer='sgd', loss = ['sparse_categorical_crossentropy'], metrics=['sparse_categorical_accuracy']) 
 model.compile(optimizer='sgd', loss=['sparse_categorical_crossentropy'], metrics=['accuracy'])
 #model.compile(optimizer='adam', loss=['categorical_crossentropy'], metrics=['categorical_crossentropy'])
@@ -245,7 +246,7 @@ lrate = LearningRateScheduler(step_decay)
 #callbacks_list = [checkpointer]
 #result = model.fit(x_train,y_train, epochs = 20, batch_size = 64, callbacks=[TQDMNotebookCallback])
 #result = model.fit(x_train,y_train, epochs = 20, batch_size = 64, callbacks=[lrate])
-result = model.fit(x_train,y_train, epochs = 300, batch_size = 32)
+result = model.fit(x_train,y_train, epochs = 100, batch_size = 64)
 
 #model_json = model.to_json()
 #with open("modelJSON.json", "w") as json_file:
@@ -254,5 +255,5 @@ result = model.fit(x_train,y_train, epochs = 300, batch_size = 32)
 
 print("Saving Model.........")
 #model.save('AttRNN_model.h5')
-model.save(os.path.join('.',DysTrainedModelPath,'DNN_model.h5'))
+model.save(os.path.join('.',DysTrainedModelPath,'Conv_model.h5'))
 print("Print the history:\n",result)
