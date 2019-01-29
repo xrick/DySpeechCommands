@@ -151,6 +151,9 @@ def all_training_data_generation(list_of_files, _labels):
 
 # generating all training data
 x_train, y_train = all_training_data_generation(_dscInfo['train']['files'],_dscInfo['train']['labels'])
+for _x, _y in (x_train, y_train):
+    print("current _x is {} and _y is {}".format(_x,_y))
+
 trainSize = len(x_train)
 print("size of x_train : ", trainSize)
 print("type of x_train is : ", x_train.__class__.__name__)
