@@ -133,7 +133,7 @@ def cnnmain():
     #__theRNNModel = __load_model(_rnn_model_path)
     print("Reading the test wav file.........")
     
-    raw_y, sr = librosa.load("../linzyCut/test/LinZY03_03_6_three.wav",sr=16000)#_read_test_wav("../linzyCut/test/LinZY03_01_6_one.wav")
+    raw_y, sr = librosa.load("../linzyCut/test/LinZY03_19_6_home.wav",sr=16000)#_read_test_wav("../linzyCut/test/LinZY03_01_6_one.wav")
     len_of_rawy = len(raw_y)
     #y_npy = np.load("../linzyCut/test/LinZY03_13_6_previous.wav.npy")
     y = _adjustNPYShape(raw_y)#np.transpose(_adjustShape(y))
@@ -152,7 +152,7 @@ def cnnmain():
     lenOfY = 19
     y_result_list = list(y_result[0])
     print(max(y_result_list))
-    print("The answer is one")
+    print("The right answer is home")
     print("====================================")
     for idx in range(19):
             print("y_result {0} element is: {1:6f} ==== {2}".format(idx, y_result[0,idx], DYSCmdCategsDigit.get(idx)))
