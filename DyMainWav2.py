@@ -44,13 +44,13 @@ def _getDyFileCategory(file, fileDict):
         
 
 def preparedyspeechcmd():
-    #DYSCmdCategs = {'unknown''one': 1, 'two' : 2, 'three' : 3, 'four' : 4, 'five' : 5, 'six' : 6, 'seven' : 7, 'eight' : 8, 'nine' : 9, 'close' : 10, 'up' : 11,
-                    #'down' : 12, 'previous' : 13, 'next' : 14, 'in' : 15, 'out' : 16,'left' : 17, 'right' : 18, 'home' : 19}
-    #DYSCmdCategs = {'one': 0, 'two' : 1, 'three' : 2, 'four' : 3, 'five' : 4, 'six' : 5, 'seven' : 6, 'eight' : 7, 'nine' : 8, 'close' : 9, 'up' : 10,
-                    #'down' : 11, 'previous' : 12, 'next' : 13, 'in' : 14, 'out' : 15, 'left' : 16, 'right' : 17, 'home' : 18}
-    DYSCmdCategs_Short = {'one': 0, 'two' : 1, 'three' : 2, 'four' : 3, 'five' : 4, 'six' : 5, 'seven' : 6, 'eight' : 7, 'nine' : 8, 'up' : 9,
-                    'down' : 10, 'left' : 11, 'right' : 12}
-    numDYCmdCategs = 13 #19
+    #DYSCmdCategs = {'unknown': 0, 'one': 1, 'two' : 2, 'three' : 3, 'four' : 4, 'five' : 5, 'six' : 6, 'seven' : 7, 'eight' : 8, 'nine' : 9, 'close' : 10, 'up' : 11,
+                   # 'down' : 12, 'previous' : 13, 'next' : 14, 'in' : 15, 'out' : 16,'left' : 17, 'right' : 18, 'home' : 19}
+    DYSCmdCategs = {'one': 0, 'two' : 1, 'three' : 2, 'four' : 3, 'five' : 4, 'six' : 5, 'seven' : 6, 'eight' : 7, 'nine' : 8, 'close' : 9, 'up' : 10,
+                    'down' : 11, 'previous' : 12, 'next' : 13, 'in' : 14, 'out' : 15, 'left' : 16, 'right' : 17, 'home' : 18}
+    #DYSCmdCategs_Short = {'one': 0, 'two' : 1, 'three' : 2, 'four' : 3, 'five' : 4, 'six' : 5, 'seven' : 6, 'eight' : 7, 'nine' : 8, 'up' : 9,
+     #               'down' : 10, 'left' : 11, 'right' : 12}
+    numDYCmdCategs = 19
     _baseDir = '../linzyCut/train/'
     firstLevelDirs = getNextLevelDirs(_baseDir)
     trainfiles = list()
@@ -64,7 +64,7 @@ def preparedyspeechcmd():
         trainfiles += files
         
     #print(trainfiles)
-    trainFilesLabels    = [_getDyFileCategory(f, DYSCmdCategs_Short) for f in trainfiles]
+    trainFilesLabels    = [_getDyFileCategory(f, DYSCmdCategs) for f in trainfiles]
     trainWAVlabelsDict    = dict(zip(trainfiles, trainFilesLabels))
     print(trainWAVlabelsDict)
     
@@ -151,8 +151,9 @@ def all_training_data_generation(list_of_files, _labels):
 
 # generating all training data
 x_train, y_train = all_training_data_generation(_dscInfo['train']['files'],_dscInfo['train']['labels'])
-for _x, _y in (x_train, y_train):
-    print("current _x is {} and _y is {}".format(_x,_y))
+trainLen = len(x_train)
+for idx in range(trainLen):
+    print("current _x is {} and _y is {}".format(x_train[idx],y_train[idx]))
 
 trainSize = len(x_train)
 print("size of x_train : ", trainSize)
@@ -217,7 +218,7 @@ from kapre.time_frequency import Melspectrogram, Spectrogram
 model = SpeechModels.ConvSpeechModel(_numofCategs, samplingrate = sr, inputLength = iLen)
 #model = SpeechModels.SimpleDNN(_numofCategs,inputLength = iLen)
 #1e-6
-sgd = SGD(lr=0.000000001) #decay=, momentum= nesterov=True)
+sgd = SGD(lr=0.0000000001) #decay=, momentum= nesterov=True)
 #adam = Adam(lr = 0.00000000001 )#,beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False),
 #model.compile(optimizer='sgd', loss = ['sparse_categorical_crossentropy'], metrics=['sparse_categorical_accuracy']) 
 model.compile(optimizer='sgd', loss=['sparse_categorical_crossentropy'], metrics=['accuracy'])
@@ -251,14 +252,15 @@ lrate = LearningRateScheduler(step_decay)
 #callbacks_list = [checkpointer]
 #result = model.fit(x_train,y_train, epochs = 20, batch_size = 64, callbacks=[TQDMNotebookCallback])
 #result = model.fit(x_train,y_train, epochs = 20, batch_size = 64, callbacks=[lrate])
-result = model.fit(x_train,y_train, epochs = 50, batch_size = 64)
+result = model.fit(x_train,y_train, epochs = 120, batch_size = 64)
 
 #model_json = model.to_json()
 #with open("modelJSON.json", "w") as json_file:
  #   print("Serializing the model to json string.....")
   #  json_file.write(model_json)
 
-print("Saving Model.........")
+#print("Saving Model.........")
 #model.save('AttRNN_model.h5')
 model.save(os.path.join('.',DysTrainedModelPath,'Conv_model.h5'))
-print("Print the history:\n",result)
+#print("Print the history:\n",result)
+print("finished.")

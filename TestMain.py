@@ -35,8 +35,11 @@ def __load_model(modelPath):
 #DYSCmdCategsDigit = {0 : 'unknown', 1:'one', 2:'two', 3:'three', 4:'four', 5:'five', 6:'six', 7:'seven', 8:'eight', 9:'nine', 10:'close', 11:'up',
  #                   12:'down', 13:'previous', 14:'next', 15:'in', 16:'out', 17:'left', 18:'right', 19:'home'}
 
-DYSCmdCategsDigit = {0:'one', 1:'two', 2:'three', 3:'four', 4:'five', 5:'six', 6:'seven', 7:'eight', 8:'nine', 9:'up',
-                    11:'down', 12:'left', 13:'right'}
+DYSCmdCategsDigit = {0 :'one', 1:'two', 2:'three', 3:'four', 4:'five', 5:'six', 6:'seven', 7:'eight', 8:'nine', 9:'close', 10:'up',
+                    11:'down', 12:'previous', 13:'next', 14:'in', 15:'out', 16:'left', 17:'right', 18:'home'}
+
+#DYSCmdCategsDigit = {0:'one', 1:'two', 2:'three', 3:'four', 4:'five', 5:'six', 6:'seven', 7:'eight', 8:'nine', 9:'up',
+ #                   11:'down', 12:'left', 13:'right'}
 
 #DYSCmdCategs_Short = {'one': 0, 'two' : 1, 'three' : 2, 'four' : 3, 'five' : 4, 'six' : 5, 'seven' : 6, 'eight' : 7, 'nine' : 8, 'up' : 9,
                     #'down' : 10, 'left' : 11, 'right' : 12}
@@ -128,7 +131,7 @@ def main2():
     _
 
 
-
+categLen = 19
 def cnnmain():
     print("Loading the Model...........")
     __theCNNModel = __load_model(_cnn_model_path)
@@ -136,7 +139,7 @@ def cnnmain():
     #__theRNNModel = __load_model(_rnn_model_path)
     print("Reading the test wav file.........")
     
-    raw_y, sr = librosa.load("../linzyCut/test/LinZY03_01_6_one.wav",sr=16000)#_read_test_wav("../linzyCut/test/LinZY03_01_6_one.wav")
+    raw_y, sr = librosa.load("../linzyCut/test/LinZY03_18_1.wav",sr=16000)#_read_test_wav("../linzyCut/test/LinZY03_01_6_one.wav")
     len_of_rawy = len(raw_y)
     #y_npy = np.load("../linzyCut/test/LinZY03_13_6_previous.wav.npy")
     y = _adjustNPYShape(raw_y)#np.transpose(_adjustShape(y))
@@ -149,15 +152,15 @@ def cnnmain():
     #print("content of input_y : ", input_y)
     #print("length is input_y: ",len(input_y))
     #print("shape's input_y is ",input_y.shape)
-    y_result = __theCNNModel.predict(input_y)
+    y_result = __theCNNModel.predict(input_y,batch_size=16)
     #y_result = __theDNNModel.predict(y)
     #y_result = __theRNNModel.predict(input_y)
-    lenOfY = 19
+    #lenOfY = 20
     y_result_list = list(y_result[0])
     print(max(y_result_list))
-    print("The right answer is one")
+    #print("The right answer is one")
     print("====================================")
-    for idx in range(13):
+    for idx in range(categLen):
             print("y_result {0} element is: {1:6f} ==== {2}".format(idx, y_result[0,idx], DYSCmdCategsDigit.get(idx)))
     print("the shape result is : ",y_result.shape)
     #print("The predicting result is:",y_result)
@@ -169,7 +172,7 @@ def dnnmain():
     #__theDNNModel = __load_model(_dnn_model_path)
     #__theRNNModel = __load_model(_rnn_model_path)
     print("Reading the test wav file.........")
-    raw_y, sr = librosa.load("../linzyCut/test/LinZY03_04_6_four.wav",sr=16000)#_read_test_wav("../linzyCut/test/LinZY03_01_6_one.wav")
+    raw_y, sr = librosa.load("../linzyCut/test/LinZY03_04_1_four.wav",sr=16000)#_read_test_wav("../linzyCut/test/LinZY03_01_6_one.wav")
     len_of_rawy = len(raw_y)
     #y_npy = np.load("../linzyCut/test/LinZY03_13_6_previous.wav.npy")
     y = _adjustNPYShape(raw_y)#np.transpose(_adjustShape(y))
@@ -185,11 +188,11 @@ def dnnmain():
     y_result = __theCNNModel.predict(input_y)
     #y_result = __theDNNModel.predict(y)
     #y_result = __theRNNModel.predict(input_y)
-    lenOfY = 19
+    #lenOfY = 19
     y_result_list = list(y_result[0])
     print(max(y_result_list))
     print("====================================")
-    for idx in range(19):
+    for idx in range(categLen):
             print("y_result {0} element is: {1:6f} ==== {2}".format(idx, y_result[0,idx], DYSCmdCategsDigit.get(idx)))
     print("the shape result is : ",y_result.shape)
     #print("The predicting result is:",y_result)
